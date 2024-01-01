@@ -218,17 +218,19 @@ class QLearnModel(Model):
             action = pi_opt
         return action
 
-# q_learning = QLearning(9, 9, 5)
 
-# game_field = [[2, 5, 5, 2, 4, 3, 5, 2, 4],
-#         [3, 2, 2, 1, 5, 1, 5, 5, 1],
-#         [2, 2, 4, 4, 1, 3, 1, 5, 2],
-#         [5, 1, 5, 2, 5, 1, 4, 3, 4],
-#         [1, 3, 4, 5, 1, 2, 3, 3, 5],
-#         [1, 4, 1, 5, 3, 3, 4, 5, 4],
-#         [3, 5, 2, 1, 1, 4, 3, 1, 4],
-#         [2, 3, 4, 3, 1, 2, 5, 3, 5],
-#         [4, 2, 4, 2, 5, 3, 2, 3, 4]]
+if __name__ == '__main__':
+    q_learning = QLearnModel(9, 9, 5)
 
-# action = q_learning.find_optimal_movement(game_field, 1)
-# print(action) 
+    game_field = [[2, 5, 5, 2, 4, 3, 5, 2, 4],
+            [3, 2, 2, 1, 5, 1, 5, 5, 1],
+            [2, 2, 4, 4, 1, 3, 1, 5, 2],
+            [5, 1, 5, 2, 5, 1, 4, 3, 4],
+            [1, 3, 4, 5, 1, 2, 3, 3, 5],
+            [1, 4, 1, 5, 3, 3, 4, 5, 4],
+            [3, 5, 2, 1, 1, 4, 3, 1, 4],
+            [2, 3, 4, 3, 1, 2, 5, 3, 5],
+            [4, 2, 4, 2, 5, 3, 2, 3, 4]]
+
+    action = q_learning.find_optimal_movement(game_field, 1)
+    print(action) 
