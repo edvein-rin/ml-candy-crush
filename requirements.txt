@@ -1,1 +1,4 @@
+collections
+numpy
+numpy
 pygame
