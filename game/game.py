@@ -13,9 +13,10 @@ class Game:
         pygame.display.set_caption("ML Candy Crush")
 
         self.__screen = pygame.display.set_mode(
-            (ROWS_NUMBER * CANDY_SIZE, COLUMNS_NUMBER * CANDY_SIZE)
+            (ROWS_NUMBER * CANDY_SIZE, COLUMNS_NUMBER * CANDY_SIZE + 40)
         )
         self.__clock = pygame.time.Clock()
+        self.__font = pygame.font.Font(pygame.font.get_default_font(), 28)
 
         self.__assets = Assets()
 
@@ -80,6 +81,11 @@ class Game:
                 ),
             )
 
+        self.__screen.blit(
+            self.__font.render("Score: %s" % self.__score, True, (255, 255, 255)),
+            (8, self.__screen.get_height() - 28 - 12 / 2),
+        )
+
         pygame.display.flip()
 
     def __loop(self):
@@ -92,6 +98,7 @@ class Game:
     def start(self):
         self.__field = GameField(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
         self.__selected_candy: Union[tuple[int, int], None] = None
+        self.__score = 0
 
         while True:
             self.__loop()
