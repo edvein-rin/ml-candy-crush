@@ -12,11 +12,6 @@ class QLearnModel(Model):
     EPSILON = 0.5
     weights = np.zeros(24, dtype=float)
     
-    def __init__(self, n_rows, n_cols, n_colors):
-        self.NROWS = n_rows
-        self.NCOLS = n_cols
-        self.NCOLORS = n_colors
-
     def dot_product(self, a, b):
         return sum(a[i] * b[i] for i in range(len(a)))
 
