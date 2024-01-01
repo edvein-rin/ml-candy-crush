@@ -25,8 +25,8 @@ class QLearnModel(Model):
     def actions(self, state):
         actions = []
         game_field = state[0]
-        for i in range(self.NROWS):
-            for j in range(self.NCOLS):
+        for i in range(self.rows_number):
+            for j in range(self.columns_number):
                 if self.is_valid_move(game_field, (i, j), (i, j + 1)):
                     coord1 = (i, j)
                     coord2 = (i, j + 1)
@@ -47,7 +47,7 @@ class QLearnModel(Model):
                 game_field[min_row - 1 - i + diff,
                            col] = game_field[min_row - 1 - i, col]
             for i in range(diff):
-                game_field[i, col] = random.randint(1, self.NCOLORS)
+                game_field[i, col] = random.randint(1, self.colors_number)
 
     def explore_coord(self, game_field, i, j):
         color = game_field[i, j]
@@ -57,7 +57,7 @@ class QLearnModel(Model):
             if color != game_field[i - row - 1, j]:
                 break
             color_rows_set.add((i - row - 1, j))
-        for row in range(i + 1, self.NROWS):
+        for row in range(i + 1, self.rows_number):
             if color != game_field[row, j]:
                 break
             color_rows_set.add((row, j))
@@ -65,7 +65,7 @@ class QLearnModel(Model):
             if color != game_field[i, j - col - 1]:
                 break
             color_cols_set.add((i, j - col - 1))
-        for col in range(j + 1, self.NCOLS):
+        for col in range(j + 1, self.columns_number):
             if color != game_field[i, col]:
                 break
             color_cols_set.add((i, col))
@@ -73,8 +73,8 @@ class QLearnModel(Model):
 
     def cascade_coords(self, game_field):
         coords = set()
-        for i in range(self.NROWS):
-            for j in range(self.NCOLS):
+        for i in range(self.rows_number):
+            for j in range(self.columns_number):
                 color_rows_set, color_cols_set = self.explore_coord(
                     game_field, i, j)
                 color_all_set = set()
@@ -124,20 +124,20 @@ class QLearnModel(Model):
         col_count = collections.Counter()
         max_row = []
         max_col = []
-        for i in range(self.NROWS):
-            for j in range(self.NCOLS):
+        for i in range(self.rows_number):
+            for j in range(self.columns_number):
                 row_count[(i, game_field[i, j])] += 1
             max_row.append(max(row_count[(i, color)]
-                           for color in range(1, self.NCOLORS)))
-        for j in range(self.NCOLS):
-            for i in range(self.NROWS):
+                           for color in range(1, self.colors_number)))
+        for j in range(self.columns_number):
+            for i in range(self.rows_number):
                 col_count[(j, game_field[i, j])] += 1
             max_col.append(max(col_count[(j, color)]
-                           for color in range(1, self.NCOLORS)))
+                           for color in range(1, self.colors_number)))
         return max_row + max_col
 
     def is_valid_coord(self, coord):
-        if (coord[0] < 0 or coord[0] >= self.NROWS) or (coord[1] < 0 or coord[1] >= self.NCOLS):
+        if (coord[0] < 0 or coord[0] >= self.rows_number) or (coord[1] < 0 or coord[1] >= self.columns_number):
             return False
         else:
             return True
@@ -162,8 +162,8 @@ class QLearnModel(Model):
 
     def num_valid_moves(self, game_field):
         count = 0
-        for i in range(self.NROWS):
-            for j in range(self.NCOLS):
+        for i in range(self.rows_number):
+            for j in range(self.columns_number):
                 if self.is_valid_move(game_field, (i, j), (i, j + 1)) or self.is_valid_move(game_field, (i, j), (i + 1, j)):
                     count += 1
         return count
