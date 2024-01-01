@@ -65,12 +65,14 @@ class Game:
     def __render(self):
         self.__screen.fill("black")
 
+        # Candies
         for i, row in enumerate(self.__field.grid):
             for j, candy in enumerate(row):
                 candy_image = self.__assets.get(Asset[f"CANDY_{candy}"])
 
                 self.__screen.blit(candy_image, (CANDY_SIZE * j, CANDY_SIZE * i))
 
+        # Selected candy
         if self.__selected_candy:
             selected_candy_image = self.__assets.get(Asset.SELECTED_CANDY)
             self.__screen.blit(
@@ -81,6 +83,7 @@ class Game:
                 ),
             )
 
+        # Score label
         self.__screen.blit(
             self.__font.render("Score: %s" % self.__score, True, (255, 255, 255)),
             (8, self.__screen.get_height() - 28 - 12 / 2),
