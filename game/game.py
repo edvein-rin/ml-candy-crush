@@ -20,6 +20,15 @@ class Game:
 
         self.__assets = Assets()
 
+        self.__field = GameField(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
+        if self.__field.has_matches():
+            print("Cascading initial game field.")
+            self.__field = self.__field.cascade()[0]
+
+        self.__selected_candy: Union[tuple[int, int], None] = None
+        self.__score = 0
+        self.__turns_left = 10
+
     def __select_candy(self, row: int, column: int):
         if self.__selected_candy:
             if self.__selected_candy[0] == row and self.__selected_candy[1] == column:
@@ -28,7 +37,12 @@ class Game:
                 can_swap = self.__field.can_swap(self.__selected_candy, (row, column))
                 if can_swap:
                     self.__turns_left -= 1
-                    self.__field.swap(self.__selected_candy, (row, column))
+                    self.__field = self.__field.swap(
+                        self.__selected_candy, (row, column)
+                    )
+                    new_game_field, broken_candies, combo = self.__field.cascade()
+                    self.__field = new_game_field
+                    self.__score += 10 * (broken_candies**2 - broken_candies) * combo
                     self.__selected_candy = None
                 else:
                     self.__selected_candy = (row, column)
@@ -108,11 +122,6 @@ class Game:
         self.__clock.tick(60)
 
     def start(self):
-        self.__field = GameField(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
-        self.__selected_candy: Union[tuple[int, int], None] = None
-        self.__score = 0
-        self.__turns_left = 10
-
         while True:
             self.__loop()
 
