@@ -2,6 +2,7 @@ import random
 import pprint
 
 from models.random.random_model import RandomModel
+from models.DQN.dqn_model import DQNModel
 
 printer = pprint.PrettyPrinter()
 
@@ -20,7 +21,9 @@ def main():
     printer.pprint(game_field)
 
     random_model = RandomModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
-    print("\nRandom best movement:", random_model.find_optimal_movement(game_field))
+    dqn_model = DQNModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
+    # print("\nRandom best movement:", random_model.find_optimal_movement(game_field))
+    print("\nDQN best movement:", dqn_model.find_optimal_movement(game_field))
 
 
 if __name__ == "__main__":
