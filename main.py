@@ -2,6 +2,8 @@ import random
 import pprint
 
 from models.random.random_model import RandomModel
+from models.greedy.greedy_model import GreedyModel
+from models.q_learn.q_learn_model import QLearnModel
 from models.DQN.dqn_model import DQNModel
 
 printer = pprint.PrettyPrinter()
@@ -21,8 +23,12 @@ def main():
     printer.pprint(game_field)
 
     random_model = RandomModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
+    greedy_model = GreedyModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
+    q_learn_model = QLearnModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
     dqn_model = DQNModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
     # print("\nRandom best movement:", random_model.find_optimal_movement(game_field))
+    print("\nGreedyModel best movement:", greedy_model.find_optimal_movement(game_field))
+    print("\nQLearn best movement:", q_learn_model.find_optimal_movement(game_field))
     print("\nDQN best movement:", dqn_model.find_optimal_movement(game_field))
 
 
