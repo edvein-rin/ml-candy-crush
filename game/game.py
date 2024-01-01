@@ -13,7 +13,7 @@ class Game:
         pygame.display.set_caption("ML Candy Crush")
 
         self.__screen = pygame.display.set_mode(
-            (ROWS_NUMBER * CANDY_SIZE, COLUMNS_NUMBER * CANDY_SIZE + 40)
+            (ROWS_NUMBER * CANDY_SIZE, COLUMNS_NUMBER * CANDY_SIZE + 80)
         )
         self.__clock = pygame.time.Clock()
         self.__font = pygame.font.Font(pygame.font.get_default_font(), 28)
@@ -25,11 +25,9 @@ class Game:
             if self.__selected_candy[0] == row and self.__selected_candy[1] == column:
                 self.__selected_candy = None
             else:
-                horizontal_difference = abs(self.__selected_candy[0] - row)
-                vertical_difference = abs(self.__selected_candy[1] - column)
-
-                can_swap = horizontal_difference + vertical_difference == 1
+                can_swap = self.__field.can_swap(self.__selected_candy, (row, column))
                 if can_swap:
+                    self.__turns_left -= 1
                     self.__field.swap(self.__selected_candy, (row, column))
                     self.__selected_candy = None
                 else:
@@ -60,7 +58,10 @@ class Game:
                         self.__selected_candy = None
 
     def __update(self):
-        pass
+        if self.__turns_left <= 0:
+            # TODO: results screen.
+            print(f"\nSCORE = {self.__score}")
+            self.stop()
 
     def __render(self):
         self.__screen.fill("black")
@@ -83,10 +84,18 @@ class Game:
                 ),
             )
 
+        # Turns left
+        self.__screen.blit(
+            self.__font.render(
+                f"Turns left: {self.__turns_left}", True, (255, 255, 255)
+            ),
+            (8, self.__screen.get_height() - (28 + 7) * 2),
+        )
+
         # Score label
         self.__screen.blit(
             self.__font.render(f"Score: {self.__score}", True, (255, 255, 255)),
-            (8, self.__screen.get_height() - 28 - 12 / 2),
+            (8, self.__screen.get_height() - (28 + 6)),
         )
 
         pygame.display.flip()
@@ -102,6 +111,7 @@ class Game:
         self.__field = GameField(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
         self.__selected_candy: Union[tuple[int, int], None] = None
         self.__score = 0
+        self.__turns_left = 10
 
         while True:
             self.__loop()

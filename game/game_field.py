@@ -31,6 +31,21 @@ class GameField:
         return [
             random.randint(1, self.colors_number) for _ in range(self.columns_number)
         ]
+    
+    def can_swap(self, candy_1_coords: tuple[int, int], candy_2_coords: tuple[int, int]) -> bool:
+        horizontal_difference = abs(candy_1_coords[0] - candy_2_coords[0])
+        vertical_difference = abs(candy_1_coords[1] - candy_2_coords[1])
+        candies_are_bordering = (
+            horizontal_difference + vertical_difference == 1
+        )
+
+        candy_1_value = self.grid[candy_1_coords[0]][candy_1_coords[1]]
+        candy_2_value = self.grid[candy_2_coords[0]][candy_2_coords[1]]
+        candies_share_color = candy_1_value == candy_2_value
+
+        # TODO: check also that swapping triggers cascade ak
+        # gives score and so not just swaps two candies.
+        return candies_are_bordering and not candies_share_color
 
     def swap(self, candy_1_coords: tuple[int, int], candy_2_coords: tuple[int, int]):
         candy_1_value = self.grid[candy_1_coords[0]][candy_1_coords[1]]
@@ -41,14 +56,6 @@ class GameField:
     
     def cascade(self):
         raise NotImplementedError()
-
-    # def generate_next_row(self) -> Self:
-    #     new_grid = deepcopy(self.grid[:-1])
-    #     new_grid.insert(0, self.__generate_row())
-
-    #     return GameField(
-    #         self.rows_number, self.columns_number, self.colors_number, new_grid
-    #     )
 
     def __str__(self) -> str:
         return str(np.matrix(self.grid))
