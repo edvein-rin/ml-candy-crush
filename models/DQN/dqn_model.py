@@ -1,5 +1,5 @@
 from models.model import Model
-from models.DQN import utils, MLPRegressor, SARS
+from models.DQN import utils, MLPRegressor, algorithm
 
 import numpy as np
 import collections
@@ -61,8 +61,8 @@ class DQNModel(Model):
             n_valid_moves = self.__num_valid_moves(state[0])
             max_delete = self.__test_switch(state, action)
 
-            sarsa_values = SARS.get_sarsa_values(state, action, self.rows_number, self.columns_number, self.colors_number) 
-            med_util = np.median(sarsa_values)
+            values = algorithm.get_values(state, action, self.rows_number, self.columns_number, self.colors_number) 
+            med_util = np.median(values)
             phi = [min_row, max_row, same_col, n_valid_moves, max_delete, med_util, *self.__max_count(state)]
             return np.array(phi)
 

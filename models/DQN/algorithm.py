@@ -3,14 +3,14 @@ import models.DQN.utils as utils
 import random
 import numpy as np
 
-NSARS = 25  # number of SARS' sequences to generate at each turn
-DEPTH = 5  # max depth of SARS' sequence
+NUMBER = 25  # number of sequences to generate at each turn
+DEPTH = 5  # max depth of sequence
 DISCOUNT = 0.5
 
-def get_sarsa_values(state, action, rows, cols, colors):
-    return [generate_sarsa(state, action, rows, cols, colors) for _ in range(NSARS)]
+def get_values(state, action, rows, cols, colors):
+    return [generate_dqn(state, action, rows, cols, colors) for _ in range(NUMBER)]
 
-def generate_sarsa(curr_state, action, rows, cols, colors):
+def generate_dqn(curr_state, action, rows, cols, colors):
     def make_switch(state, action):
         grid = np.array(state[0])
         coord1, coord2 = action
