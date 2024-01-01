@@ -1,5 +1,5 @@
 install: FORCE ## Intall requirements.
-	@pip3 -r requirements.txt
+	@pip3 install -r requirements.txt
 
 run: FORCE ## Run the game.
 	@python main.py
