@@ -16,7 +16,7 @@ class GreedyModel(Model):
                 game_field[minRow - 1 - i + diff,
                            col] = game_field[minRow - 1 - i, col]
             for i in range(diff):
-                game_field[i, col] = random.randint(1, self.NCOLORS)
+                game_field[i, col] = random.randint(1, self.colors_number)
 
     def explore_coord(self, game_field, i, j):
         color = game_field[i, j]
@@ -26,7 +26,7 @@ class GreedyModel(Model):
             if color != game_field[i - row - 1, j]:
                 break
             colorRowsSet.add((i - row - 1, j))
-        for row in range(i + 1, self.NROWS):
+        for row in range(i + 1, self.rows_number):
             if color != game_field[row, j]:
                 break
             colorRowsSet.add((row, j))
@@ -34,7 +34,7 @@ class GreedyModel(Model):
             if color != game_field[i, j - col - 1]:
                 break
             colorColsSet.add((i, j - col - 1))
-        for col in range(j + 1, self.NCOLS):
+        for col in range(j + 1, self.columns_number):
             if color != game_field[i, col]:
                 break
             colorColsSet.add((i, col))
@@ -42,8 +42,8 @@ class GreedyModel(Model):
 
     def cascade_coords(self, game_field):
         coords = set()
-        for i in range(self.NROWS):
-            for j in range(self.NCOLS):
+        for i in range(self.rows_number):
+            for j in range(self.columns_number):
                 colorRowsSet, colorColsSet = self.explore_coord(
                     game_field, i, j)
                 colorAllSet = set()
@@ -83,7 +83,7 @@ class GreedyModel(Model):
         return score, combo
 
     def check_coord_validity(self, coord):
-        if (coord[0] < 0 or coord[0] >= self.NROWS) or (coord[1] < 0 or coord[1] >= self.NCOLS):
+        if (coord[0] < 0 or coord[0] >= self.rows_number) or (coord[1] < 0 or coord[1] >= self.columns_number):
             return False
         else:
             return True
@@ -105,11 +105,11 @@ class GreedyModel(Model):
         return False
 
     def find_optimal_movement(self, game_field):
-        coord1 = []
-        coord2 = []
+        coord1 = ()
+        coord2 = ()
         max_score = 0
-        for i in range(self.NROWS):
-            for j in range(self.NCOLS):
+        for i in range(self.rows_number):
+            for j in range(self.columns_number):
                 temp_game_field = np.array(game_field)
                 if self.check_move_validity(game_field, (i, j), (i, j + 1)):
                     candidate_coord1 = (i, j)
@@ -131,7 +131,7 @@ class GreedyModel(Model):
                         max_score = turn_score
                         coord1 = candidate_coord1
                         coord2 = candidate_coord2
-        return [coord1, coord2]
+        return (coord1, coord2)
 
 
 if __name__ == '__main__':
