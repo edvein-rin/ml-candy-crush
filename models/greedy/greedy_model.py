@@ -4,9 +4,8 @@ import numpy as np
 from models.model import Model
 
 
-class Greedy(Model):
-    def __init__(self, num_samples, n_rows, n_cols, n_colors, score, combo):
-        self.NUMSAMPLES = num_samples
+class GreedyModel(Model):
+    def __init__(self, n_rows, n_cols, n_colors, score, combo):
         self.NROWS = n_rows
         self.NCOLS = n_cols
         self.NCOLORS = n_colors
@@ -146,7 +145,7 @@ class Greedy(Model):
         return [coord1, coord2]
 
 
-# greedy = Greedy(1000, 9, 9, 5, 0, 1)
+# greedy = Greedy(9, 9, 5, 0, 1)
 
 # game_field = [[2, 5, 5, 2, 4, 3, 5, 2, 4],
 #         [3, 2, 2, 1, 5, 1, 5, 5, 1],
