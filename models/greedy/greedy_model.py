@@ -5,12 +5,6 @@ from models.model import Model
 
 
 class GreedyModel(Model):
-    def __init__(self, n_rows, n_cols, n_colors, score, combo):
-        self.NROWS = n_rows
-        self.NCOLS = n_cols
-        self.NCOLORS = n_colors
-        self.SCORE = score
-        self.COMBO = combo
 
     def drop_columns(self, game_field, colsToRowsMap):
         for col in colsToRowsMap:
@@ -111,8 +105,6 @@ class GreedyModel(Model):
         return False
 
     def find_optimal_movement(self, game_field):
-        self.SCORE = 0
-        self.COMBO = 1
         coord1 = []
         coord2 = []
         max_score = 0
@@ -124,7 +116,7 @@ class GreedyModel(Model):
                     candidate_coord2 = (i, j + 1)
                     temp_game_field[candidate_coord1], temp_game_field[candidate_coord2] = temp_game_field[
                         candidate_coord2], temp_game_field[candidate_coord1]
-                    turn_score, self.COMBO = self.cascade(temp_game_field)
+                    turn_score, combo = self.cascade(temp_game_field)
                     if turn_score > max_score:
                         max_score = turn_score
                         coord1 = candidate_coord1
@@ -134,30 +126,28 @@ class GreedyModel(Model):
                     candidate_coord2 = (i + 1, j)
                     temp_game_field[candidate_coord1], temp_game_field[candidate_coord2] = temp_game_field[
                         candidate_coord2], temp_game_field[candidate_coord1]
-                    turn_score, self.COMBO = self.cascade(temp_game_field)
+                    turn_score, combo = self.cascade(temp_game_field)
                     if turn_score > max_score:
                         max_score = turn_score
                         coord1 = candidate_coord1
                         coord2 = candidate_coord2
-        self.SCORE, self.COMBO = self.cascade(game_field)
-        self.SCORE += self.SCORE
-
         return [coord1, coord2]
 
 
-# greedy = Greedy(9, 9, 5, 0, 1)
+if __name__ == '__main__':
+    greedy = GreedyModel(9, 9, 5)
 
-# game_field = [[2, 5, 5, 2, 4, 3, 5, 2, 4],
-#         [3, 2, 2, 1, 5, 1, 5, 5, 1],
-#         [2, 2, 4, 4, 1, 3, 1, 5, 2],
-#         [5, 1, 5, 2, 5, 1, 4, 3, 4],
-#         [1, 3, 4, 5, 1, 2, 3, 3, 5],
-#         [1, 4, 1, 5, 3, 3, 4, 5, 4],
-#         [3, 5, 2, 1, 1, 4, 3, 1, 4],
-#         [2, 3, 4, 3, 1, 2, 5, 3, 5],
-#         [4, 2, 4, 2, 5, 3, 2, 3, 4]]
+    game_field = [[2, 5, 5, 2, 4, 3, 5, 2, 4],
+                  [3, 2, 2, 1, 5, 1, 5, 5, 1],
+                  [2, 2, 4, 4, 1, 3, 1, 5, 2],
+                  [5, 1, 5, 2, 5, 1, 4, 3, 4],
+                  [1, 3, 4, 5, 1, 2, 3, 3, 5],
+                  [1, 4, 1, 5, 3, 3, 4, 5, 4],
+                  [3, 5, 2, 1, 1, 4, 3, 1, 4],
+                  [2, 3, 4, 3, 1, 2, 5, 3, 5],
+                  [4, 2, 4, 2, 5, 3, 2, 3, 4]]
 
-# game_field = np.array(game_field)
+    game_field = np.array(game_field)
 
-# action = greedy.find_optimal_movement(game_field)
-# print(action)
+    optimal_movement = greedy.find_optimal_movement(game_field)
+    print(optimal_movement)
