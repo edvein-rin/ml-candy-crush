@@ -6,12 +6,11 @@ from models.model import Model
 
 
 class QLearn(Model):
-    def __init__(self, n_features, n_sars, depth, num_samples, n_turns, n_rows, n_cols, n_colors, discount, step_size, epsilon, weights):
+    def __init__(self, n_features, n_sars, depth, num_samples, n_rows, n_cols, n_colors, discount, step_size, epsilon, weights):
         self.NFEATURES = n_features
         self.NSARS = n_sars
         self.DEPTH = depth
         self.NUMSAMPLES = num_samples
-        self.NTURNS = n_turns
         self.NROWS = n_rows
         self.NCOLS = n_cols
         self.NCOLORS = n_colors
@@ -215,9 +214,8 @@ class QLearn(Model):
             return 0.
         return self.dot_product(self.get_feature_vec(state, action), self.weights)
 
-    def find_optimal_movement(self, game_field, turn):
+    def find_optimal_movement(self, game_field, turns_left):
         action = None
-        turns_left = self.NTURNS - turn
         curr_state = (self.arr_to_tuple(game_field), turns_left)
         if random.random() < self.EPSILON:
             action = random.choice(self.actions(curr_state))
@@ -227,7 +225,7 @@ class QLearn(Model):
             action = pi_opt
         return action
 
-# q_learning = QLearning(24, 25, 5, 10000, 50, 9, 9, 5, 0.5,
+# q_learning = QLearning(24, 25, 5, 10000, 9, 9, 5, 0.5,
 #                        0.00000000001, 0.5, np.zeros(24, dtype=float))
 
 # game_field = [[2, 5, 5, 2, 4, 3, 5, 2, 4],
