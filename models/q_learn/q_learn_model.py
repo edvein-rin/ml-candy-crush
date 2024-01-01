@@ -11,7 +11,7 @@ class QLearnModel(Model):
     DISCOUNT = 0.5
     EPSILON = 0.5
     weights = np.zeros(24, dtype=float)
-    
+
     def dot_product(self, a, b):
         return sum(a[i] * b[i] for i in range(len(a)))
 
@@ -223,14 +223,14 @@ if __name__ == '__main__':
     q_learning = QLearnModel(9, 9, 5)
 
     game_field = [[2, 5, 5, 2, 4, 3, 5, 2, 4],
-            [3, 2, 2, 1, 5, 1, 5, 5, 1],
-            [2, 2, 4, 4, 1, 3, 1, 5, 2],
-            [5, 1, 5, 2, 5, 1, 4, 3, 4],
-            [1, 3, 4, 5, 1, 2, 3, 3, 5],
-            [1, 4, 1, 5, 3, 3, 4, 5, 4],
-            [3, 5, 2, 1, 1, 4, 3, 1, 4],
-            [2, 3, 4, 3, 1, 2, 5, 3, 5],
-            [4, 2, 4, 2, 5, 3, 2, 3, 4]]
+                  [3, 2, 2, 1, 5, 1, 5, 5, 1],
+                  [2, 2, 4, 4, 1, 3, 1, 5, 2],
+                  [5, 1, 5, 2, 5, 1, 4, 3, 4],
+                  [1, 3, 4, 5, 1, 2, 3, 3, 5],
+                  [1, 4, 1, 5, 3, 3, 4, 5, 4],
+                  [3, 5, 2, 1, 1, 4, 3, 1, 4],
+                  [2, 3, 4, 3, 1, 2, 5, 3, 5],
+                  [4, 2, 4, 2, 5, 3, 2, 3, 4]]
 
-    action = q_learning.find_optimal_movement(game_field, 1)
-    print(action) 
+    optimal_movement = q_learning.find_optimal_movement(game_field, 1)
+    print(optimal_movement)
