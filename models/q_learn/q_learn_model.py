@@ -5,19 +5,17 @@ import collections
 from models.model import Model
 
 
-class QLearn(Model):
-    def __init__(self, n_features, n_sars, depth, num_samples, n_rows, n_cols, n_colors, discount, step_size, epsilon, weights):
-        self.NFEATURES = n_features
-        self.NSARS = n_sars
-        self.DEPTH = depth
-        self.NUMSAMPLES = num_samples
+class QLearnModel(Model):
+    NSARS = 25
+    DEPTH = 5
+    DISCOUNT = 0.5
+    EPSILON = 0.5
+    weights = np.zeros(24, dtype=float)
+    
+    def __init__(self, n_rows, n_cols, n_colors):
         self.NROWS = n_rows
         self.NCOLS = n_cols
         self.NCOLORS = n_colors
-        self.DISCOUNT = discount
-        self.STEP_SIZE = step_size
-        self.EPSILON = epsilon
-        self.weights = weights
 
     def dot_product(self, a, b):
         return sum(a[i] * b[i] for i in range(len(a)))
@@ -214,7 +212,7 @@ class QLearn(Model):
             return 0.
         return self.dot_product(self.get_feature_vec(state, action), self.weights)
 
-    def find_optimal_movement(self, game_field, turns_left):
+    def find_optimal_movement(self, game_field, turns_left=1):
         action = None
         curr_state = (self.arr_to_tuple(game_field), turns_left)
         if random.random() < self.EPSILON:
@@ -225,8 +223,7 @@ class QLearn(Model):
             action = pi_opt
         return action
 
-# q_learning = QLearning(24, 25, 5, 10000, 9, 9, 5, 0.5,
-#                        0.00000000001, 0.5, np.zeros(24, dtype=float))
+# q_learning = QLearning(9, 9, 5)
 
 # game_field = [[2, 5, 5, 2, 4, 3, 5, 2, 4],
 #         [3, 2, 2, 1, 5, 1, 5, 5, 1],
