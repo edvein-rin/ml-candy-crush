@@ -85,7 +85,7 @@ class Game:
 
         # Score label
         self.__screen.blit(
-            self.__font.render("Score: %s" % self.__score, True, (255, 255, 255)),
+            self.__font.render(f"Score: {self.__score}", True, (255, 255, 255)),
             (8, self.__screen.get_height() - 28 - 12 / 2),
         )
 
