@@ -17,3 +17,10 @@ Run the game:
 ```bash
 make run
 ```
+
+Run tests:
+
+```bash
+make test
+```
+
