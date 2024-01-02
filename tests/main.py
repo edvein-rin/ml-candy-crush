@@ -5,6 +5,7 @@ sys.path.append("..")
 from models.DQN.dqn_model import DQNModel
 from models.greedy.greedy_model import GreedyModel
 from models.q_learn.q_learn_model import QLearnModel
+from game.game_field import GameField
 from plots import plot_cumulative_rewards, plot_total_rewards
 
 import random
@@ -14,6 +15,7 @@ ROWS_NUMBER = 9
 COLUMNS_NUMBER = 9
 COLORS_NUMBER = 5
 
+
 # DUMMY FUNC, REPLACE
 def init_game_field():
     return [
@@ -21,22 +23,26 @@ def init_game_field():
         for _ in range(ROWS_NUMBER)
     ]
 
+
 # DUMMY FUNC, REPLACE
-def update_game_field(game_field, action):
-    game_field = init_game_field()
-    reward = 100*random.randint(1, 10)
-    return game_field, reward
+def update_game_field(game_field: GameField, action):
+    updated_game_field, broken_candies, combo = game_field.swap(
+        action[0], action[1]
+    ).cascade()
+    reward = 10 * (broken_candies**2 - broken_candies) * combo
+
+    return updated_game_field, reward
 
 
-async def process_model(model, game_field, rounds_left, rewards):
-    action = model.find_optimal_movement(game_field, rounds_left)
+async def process_model(model, game_field: GameField, rounds_left, rewards):
+    action = model.find_optimal_movement(game_field.grid, rounds_left)
     game_field, reward = update_game_field(game_field, action)
     rewards.append(reward)
-    print(model, action, reward)
+    print(model.__class__.__name__, action, reward)
 
 
 async def main():
-    TOTAL_ROUNDS = 2
+    TOTAL_TURNS = 5
 
     models = {
         "DQN": DQNModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER),
@@ -44,18 +50,26 @@ async def main():
         "Greedy": GreedyModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER),
     }
 
-    initial_game_field = init_game_field()
+    initial_game_field = GameField(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
+    initial_game_field, _, _ = initial_game_field.cascade()
 
     rewards = {model: [0] for model in models}  # To store rewards for each model
-    game_fields = {model: initial_game_field for model in models}  # Separate game field for each model
+    game_fields = {
+        model: initial_game_field for model in models
+    }  # Separate game field for each model
 
+    for turn in range(TOTAL_TURNS):
+        turns_left = TOTAL_TURNS - turn
+        print("------", "TURN", turn + 1, "------")
+        await asyncio.gather(
+            *(
+                process_model(
+                    models[model], game_fields[model], turns_left, rewards[model]
+                )
+                for model in models
+            )
+        )
 
-    for round in range(TOTAL_ROUNDS):
-        rounds_left = TOTAL_ROUNDS - round
-        print(round)
-        await asyncio.gather(*(process_model(models[model], game_fields[model], rounds_left, rewards[model]) for model in models))
-
-    
     plot_cumulative_rewards(models, rewards)
     plot_total_rewards(models, rewards)
 

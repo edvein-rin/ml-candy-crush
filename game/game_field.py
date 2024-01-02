@@ -107,7 +107,7 @@ class GameField:
 
         return new_grid
 
-    def cascade(self, broken_candies = 0, combo = 1):
+    def cascade(self, broken_candies = 0, combo = 1) -> tuple[Self, int, int]:
         "Cascades game field. Doesn't mutate the game field."
 
         new_grid = deepcopy(self.grid)
