@@ -22,7 +22,6 @@ class Game:
 
         self.__field = GameField(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER)
         if self.__field.has_matches():
-            print("Cascading initial game field.")
             self.__field = self.__field.cascade()[0]
 
         self.__selected_candy: Union[tuple[int, int], None] = None
