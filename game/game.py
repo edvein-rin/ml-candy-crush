@@ -1,4 +1,5 @@
 import pygame
+import random
 from typing import Union
 
 from game.game_field import GameField
@@ -142,20 +143,28 @@ class Game:
 
             if value:
                 for candy_coordinates in value:
+                    size_coefficient = {0: 1, 1: 0.9, 2: 0.8}[i]
                     pygame.draw.rect(
                         self.__screen,
                         color,
                         pygame.Rect(
-                            candy_coordinates[1] * CANDY_SIZE + CANDY_SIZE / 2 - CANDY_SIZE * 0.5 / 2,
-                            candy_coordinates[0] * CANDY_SIZE + CANDY_SIZE / 2 - CANDY_SIZE * 0.5 / 2,
-                            CANDY_SIZE * 0.5,
-                            CANDY_SIZE * 0.5,
+                            candy_coordinates[1] * CANDY_SIZE
+                            + CANDY_SIZE / 2
+                            - CANDY_SIZE * 0.5 / 2,
+                            candy_coordinates[0] * CANDY_SIZE
+                            + CANDY_SIZE / 2
+                            - CANDY_SIZE * 0.5 / 2,
+                            CANDY_SIZE * 0.5 * size_coefficient,
+                            CANDY_SIZE * 0.5 * size_coefficient,
                         ),
                     )
 
             self.__screen.blit(
                 self.__font.render(model_name[0], True, color),
-                (self.__screen.get_width() - 40 - i * 40, self.__screen.get_height() - (28 + 6)),
+                (
+                    self.__screen.get_width() - 40 - i * 40,
+                    self.__screen.get_height() - (28 + 6),
+                ),
             )
 
         pygame.display.flip()
