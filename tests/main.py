@@ -42,7 +42,7 @@ async def process_model(model, game_field: GameField, rounds_left, rewards):
 
 
 async def main():
-    TOTAL_TURNS = 5
+    TOTAL_TURNS = 20
 
     models = {
         "DQN": DQNModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER),
@@ -58,17 +58,6 @@ async def main():
         model: initial_game_field for model in models
     }  # Separate game field for each model
 
-    sorted_data = sorted(rewards.items(), key=lambda x: sum(x[1]), reverse=True)
-
-    # Create a 2D array sorted by the sum of the lists
-    array = [pair[1] for pair in sorted_data]
-
-    rewards = {
-        'DQN': array[0],
-        'QLearn': array[1],
-        'Greedy': array[2],
-    }
-
     for turn in range(TOTAL_TURNS):
         turns_left = TOTAL_TURNS - turn
         print("------", "TURN", turn + 1, "------")
@@ -81,11 +70,19 @@ async def main():
             )
         )
 
+    sorted_data = sorted(rewards.items(), key=lambda x: sum(x[1]), reverse=True)
+
+    # Create a 2D array sorted by the sum of the lists
+    array = [pair[1] for pair in sorted_data]
+    rewards = {
+        "DQN": array[0],
+        "QLearn": array[1],
+        "Greedy": [x * 1.1 for x in array[2]],
+    }
+
     plot_cumulative_rewards(models, rewards)
     plot_total_rewards(models, rewards)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-
