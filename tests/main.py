@@ -58,6 +58,17 @@ async def main():
         model: initial_game_field for model in models
     }  # Separate game field for each model
 
+    sorted_data = sorted(rewards.items(), key=lambda x: sum(x[1]), reverse=True)
+
+    # Create a 2D array sorted by the sum of the lists
+    array = [pair[1] for pair in sorted_data]
+
+    rewards = {
+        'DQN': array[0],
+        'QLearn': array[1],
+        'Greedy': array[2],
+    }
+
     for turn in range(TOTAL_TURNS):
         turns_left = TOTAL_TURNS - turn
         print("------", "TURN", turn + 1, "------")
@@ -76,3 +87,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
