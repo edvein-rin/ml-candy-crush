@@ -3,8 +3,8 @@ import models.DQN.utils as utils
 import random
 import numpy as np
 
-NUMBER = 25  # number of sequences to generate at each turn
-DEPTH = 5  # max depth of sequence
+NUMBER = 1  # number of sequences to generate at each turn
+DEPTH = 1  # max depth of sequence
 DISCOUNT = 0.5
 
 def get_values(state, action, rows, cols, colors):

@@ -3,8 +3,17 @@ from typing import Union
 
 from game.game_field import GameField
 from game.assets import Assets, Asset
-
 from game.constants import ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER, CANDY_SIZE
+from models.model import Model
+from models.greedy.greedy_model import GreedyModel
+from models.DQN.dqn_model import DQNModel
+from models.q_learn.q_learn_model import QLearnModel
+
+MODEL_NAME_TO_COLOR = {
+    "GreedyModel": (255, 0, 0),
+    "QLearnModel": (0, 255, 0),
+    "DQNModel": (0, 0, 255),
+}
 
 
 class Game:
@@ -27,6 +36,13 @@ class Game:
         self.__selected_candy: Union[tuple[int, int], None] = None
         self.__score = 0
         self.__turns_left = 10
+        self.__turn = 1
+        self.__models = [
+            GreedyModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER),
+            QLearnModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER),
+            DQNModel(ROWS_NUMBER, COLUMNS_NUMBER, COLORS_NUMBER),
+        ]
+        self.__model_values = {}
 
     def __select_candy(self, row: int, column: int):
         if self.__selected_candy:
@@ -36,6 +52,9 @@ class Game:
                 can_swap = self.__field.can_swap(self.__selected_candy, (row, column))
                 if can_swap:
                     self.__turns_left -= 1
+                    self.__turn += 1
+                    self.__model_values = {}
+
                     self.__field = self.__field.swap(
                         self.__selected_candy, (row, column)
                     )
@@ -111,12 +130,53 @@ class Game:
             (8, self.__screen.get_height() - (28 + 6)),
         )
 
+        # Model hints
+        for i, model in enumerate(self.__models):
+            model_name = model.__class__.__name__
+            color = MODEL_NAME_TO_COLOR[model_name]
+            value = (
+                self.__model_values[model_name]
+                if model_name in self.__model_values
+                else None
+            )
+
+            if value:
+                for candy_coordinates in value:
+                    pygame.draw.rect(
+                        self.__screen,
+                        color,
+                        pygame.Rect(
+                            candy_coordinates[1] * CANDY_SIZE + CANDY_SIZE / 2 - CANDY_SIZE * 0.5 / 2,
+                            candy_coordinates[0] * CANDY_SIZE + CANDY_SIZE / 2 - CANDY_SIZE * 0.5 / 2,
+                            CANDY_SIZE * 0.5,
+                            CANDY_SIZE * 0.5,
+                        ),
+                    )
+
+            self.__screen.blit(
+                self.__font.render(model_name[0], True, color),
+                (self.__screen.get_width() - 40 - i * 40, self.__screen.get_height() - (28 + 6)),
+            )
+
         pygame.display.flip()
+
+    def __post_render_update(self):
+        to_print = False
+        for model in self.__models:
+            model_name = model.__class__.__name__
+            if model_name not in self.__model_values:
+                to_print = True
+                self.__model_values[model_name] = model.find_optimal_movement(
+                    self.__field.grid, self.__turns_left
+                )
+        if to_print:
+            print(f"TURN {self.__turn} :", self.__model_values)
 
     def __loop(self):
         self.__handle_input()
         self.__update()
         self.__render()
+        self.__post_render_update()
 
         self.__clock.tick(60)
 
